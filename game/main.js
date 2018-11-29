@@ -4,18 +4,18 @@ window.mouseDragged = () => {
     state.mouseDragged();
 }
 
-function preload() {
-    state.preload();
+window.preload = () => {
+	state.preload();
 }
 
-function keyPressed() {
-    state.keyPressed();
+window.keyPressed = () => {
+	state.keyPressed();
 }
 
-function setup() {
-    state.setup();
+window.setup = () => {
+	state.setup();
 }
 
-function draw() {
-    state.draw();
+window.draw = () => {
+	state.draw();
 }
