@@ -1,113 +1,92 @@
-asset = (name) => { return 'localhost:80/assets/' + name }
-
-const _gameState_color_map = [
-    () => { fill(0, 255, 0) },
-    () => { fill(255, 0, 0) },
-]
+import { Tile, GrassTile, BuildingTile } from "./tile.js"
 
 class gameState {
-    constructor() {
+    constructor(sketch) {
+        this.sketch = sketch;
+
         this.pending = [];
-        this.items = [];
+        this.map = [];
         this.effects = [];
-        this.select = [];
+
         this.x = 0
         this.y = 0
     }
 
     preload() {
-        this.images = {
-            grass: loadImage("https://abs.twimg.com/emoji/v1/72x72/1f332.png"),
-            building: loadImage("https://i.imgur.com/wcqbfPG.png")
-        }
+        Tile._loadImages();
     }
 
     setup() {
-        createCanvas(windowWidth - 21, windowHeight - 20);
+        this.sketch.createCanvas(this.sketch.windowWidth - 21, this.sketch.windowHeight - 20);
+
+        let height = this.sketch.height;
+        let width = this.sketch.width;
 
         for (let col = 0; col < Math.floor(height / 50); col++) {
-            let row = [];
+            let row_ = [];
 
-            for (let r = 0; r < Math.floor(width / 50); r++) {
-                let s = createSprite(-50, -50, 50, 50);
-                row.push(new entity(s, "grass"));
-                s.addImage(this.images.grass);
+            for (let row = 0; row < Math.floor(width / 50); row++) {
+                row_.push(new GrassTile(this.sketch, row, col));
             }
 
-            this.items.push(row);
+            this.map.push(row_);
         }
 
-        console.log(this.items)
-        state.blink();
+        this.blink();
     }
 
     keyPressed() {
-        if (keyCode === 88) {
-            noLoop();
-            while (this.select.length) {
-                let xy = this.select.pop();
-                console.log(xy)
 
-                this.effects[xy[2]] = () => {
-                    push();
-                    fill(255);
-                    rect(xy[0] * 50, xy[1] * 50, 50, 50);
-                    pop();
-                };
-            }
-            loop();
-        }
+    }
+
+    mouseClicked() {
+        let t = new BuildingTile(this.sketch, this.x, this.y, {});
+
+        this.map[this.y][this.x] = t;
+        this.pending.push(t);
+
+        return false;
     }
 
     mouseDragged() {
-        console.log(this.x, this.y)
-        let tile = this.items[this.y][this.x];
+        let t = new BuildingTile(this.sketch, this.x, this.y, {});
 
-        if (tile.type === "grass") {
-            let x = this.x, y = this.y;
-            this.effects.push(() => {
-                push();
-                fill(0, 255, 0);
-                rect(x * 50, y * 50, 50, 50);
-                pop();
-            });
-
-            this.select.push([x, y, this.effects.length - 1]);
-        }
+        this.map[this.y][this.x] = t;
+        this.pending.push(t);
 
         return false;
     }
 
     blink() {
-        for (let y = 0; y != this.items.length; y++) {
-            let row = this.items[y];
-            let x = 0;
+        for (let y = 0; y != this.map.length; y++) {
+            let row = this.map[y];
 
-            for (let block of row) {
-                if (block != undefined) {
-                    block.sprite.position.x = x;
-                    block.sprite.position.y = y * 50;
-                } else {
-                    push();
-                    fill(255);
-                    rect(x, y, 50, 50);
-                    pop();
-                }
-                x += 50;
+            for (let tile of row) {
+                tile.update();
             };
         }
     }
 
     draw() {
-        this.x = Math.floor(mouseX / 50);
-        this.y = Math.floor(mouseY / 50);
+        this.x = Math.floor(this.sketch.mouseX / 50);
+        this.y = Math.floor(this.sketch.mouseY / 50);
 
-        this.blink()
+        if (!this.pendingLock) {
+            this.pendingLock = true;
 
-        drawSprites();
+            while (this.pending.length) {
+                let t = this.pending.pop();
+                console.log(t)
+                t.update();
+            }
+
+            this.pendingLock = false;
+        }
 
         for (let effect of this.effects) {
-            effect()
+            effect.draw();
         }
     }
 }
+
+export { gameState };
