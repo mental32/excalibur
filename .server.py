@@ -6,7 +6,7 @@ game = flask.Blueprint('game', __name__ + '_game', url_prefix='/game')
 @game.route('/<fn>')
 def game_root(fn):
     with open('game/%s' % fn) as inf:
-        return inf.read()
+        return flask.Response(inf.read(), mimetype='text/javascript')
 
 @app.route('/')
 def main():
