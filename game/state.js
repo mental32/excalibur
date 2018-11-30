@@ -1,4 +1,4 @@
-import { Tile, GrassTile, BuildingTile } from "./tile.js"
+import { Tile, GrassTile, BuildingTile, ColorTile } from "./tile.js"
 
 class gameState {
     constructor(sketch) {
@@ -40,15 +40,30 @@ class gameState {
     }
 
     mouseClicked() {
-        let t = new BuildingTile(this.sketch, this.x, this.y, {});
+        // let t = new BuildingTile(this.sketch, this.x, this.y, {});
 
-        this.map[this.y][this.x] = t;
-        this.pending.push(t);
+        // this.map[this.y][this.x] = t;
+        // this.pending.push(t);
+
+        let x = this.x;
+        let y = this.y;
+
+        let e = new RedscrollEffect(this.sketch, x, y, {height: 0});
+
+        this.effects.push(e)
+
+        e.callback = () => {
+            this.map[y][x].clear();
+            this.map[y][x] = new ColorTile(this.sketch, x * 50, y * 50, { color: '#573B0C' });
+            this.pending.push(this.map[y][x]);
+        }
 
         return false;
     }
 
     mouseDragged() {
+        this.map[this.y][this.x].clear();
+
         let t = new BuildingTile(this.sketch, this.x, this.y, {});
 
         this.map[this.y][this.x] = t;
