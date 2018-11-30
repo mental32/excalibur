@@ -76,15 +76,25 @@ class gameState {
 
             while (this.pending.length) {
                 let t = this.pending.pop();
-                console.log(t)
                 t.update();
             }
 
             this.pendingLock = false;
         }
 
-        for (let effect of this.effects) {
-            effect.draw();
+        let toClean = 0;
+        for (let e = 0; e < this.effects.length; e++) {
+            if (this.effects[e].update()) {
+                this.effects[e].callback();
+                this.effects[e] = undefined;
+                toClean += 1;
+            }
+        }
+
+        if (toClean) {
+            this.effects = this.effects.filter((v, i, a) => {
+            return v != undefined
+            })
         }
     }
 }
