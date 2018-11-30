@@ -1,4 +1,4 @@
-const state = new gameState();
+import { gameState } from "./state.js"
 
 window.p5 = new p5((sketch) => {
 	let state = new gameState(sketch);
