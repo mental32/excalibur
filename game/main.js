@@ -1,21 +1,31 @@
 const state = new gameState();
 
-window.mouseDragged = () => {
-    state.mouseDragged();
-}
+window.p5 = new p5((sketch) => {
+	let state = new gameState(sketch);
 
-window.preload = () => {
-	state.preload();
-}
+	window.state = state;
 
-window.keyPressed = () => {
-	state.keyPressed();
-}
+	sketch.mouseClicked = () => {
+		state.mouseClicked()
+	}
 
-window.setup = () => {
-	state.setup();
-}
+	sketch.mouseDragged = () => {
+		state.mouseDragged();
+	}
 
-window.draw = () => {
-	state.draw();
-}
+	sketch.preload = () => {
+		state.preload();
+	}
+
+	sketch.keyPressed = () => {
+		state.keyPressed();
+	}
+
+	sketch.setup = () => {
+		state.setup();
+	}
+
+	sketch.draw = () => {
+		state.draw();
+	}
+}, document.getElementById('game'));
