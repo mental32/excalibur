@@ -33,10 +33,19 @@ class MouseEffect extends Effect {
 
 class MouseSelectEffect extends MouseEffect {
 	update() {
-		this.sketch.push();
-		this.sketch.fill(this.metadata.color);
-		this.sketch.rect(Math.floor(this.sketch.mouseX / 50) * 50, Math.floor(this.sketch.mouseX / 50) * 50, 50, 50);
-		this.sketch.pop();
+		let x = Math.floor(this.sketch.mouseX / 50);
+		let y = Math.floor(this.sketch.mouseY / 50);
+
+		if (y < window.state.map.length && x < window.state.map[0].length) {
+			window.state.map[y][x].clear();
+
+			this.sketch.push();
+			this.sketch.fill(this.metadata.color);
+			this.sketch.rect(x * 50, y * 50, 50, 50);
+			this.sketch.pop();
+
+			window.state.pending.push(window.state.map[y][x]);
+		}
 	}
 }
 
