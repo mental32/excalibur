@@ -1,5 +1,3 @@
-import { Sprite } from "./sprite.js"
-
 let asset = (name) => { return 'https://raw.githubusercontent.com/mental32/excalibur/master/assets/' + name }
 
 const _image_data = [
