@@ -1,4 +1,6 @@
 import { Tile, GrassTile, BuildingTile, ColorTile } from "./tile.js"
+import { RedscrollEffect, MouseSelectEffect } from "./effect.js"
+import { KeyReactor } from "./select.js"
 
 class gameState {
     constructor(sketch) {
@@ -7,6 +9,21 @@ class gameState {
         this.pending = [];
         this.map = [];
         this.effects = [];
+
+        this._old_x = 0;
+        this._old_y = 0;
+
+        this.reactors = [
+            new KeyReactor(sketch),
+            new KeyReactor(sketch),
+        ];
+
+        this.reactorMode = 0;
+
+        this.reactors[0].bindings.set(82, () => {
+            let e = new MouseSelectEffect(this.sketch, { color: (0, 0, 255)});
+            this.effects.push(e)
+        })
 
         this.x = 0
         this.y = 0
@@ -91,7 +108,7 @@ class gameState {
 
             while (this.pending.length) {
                 let t = this.pending.pop();
-                t.update();
+                if (t) t.update();
             }
 
             this.pendingLock = false;
