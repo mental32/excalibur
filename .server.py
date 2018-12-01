@@ -5,8 +5,11 @@ game = flask.Blueprint('game', __name__ + '_game', url_prefix='/game')
 
 @game.route('/<fn>')
 def game_root(fn):
-    with open('game/%s' % fn) as inf:
-        return flask.Response(inf.read(), mimetype='text/javascript')
+    try:
+        with open('game/%s' % fn) as inf:
+            return flask.Response(inf.read(), mimetype='text/javascript')
+    except FileNotFoundError:
+        return flask.abort(404)        
 
 @app.route('/')
 def main():
