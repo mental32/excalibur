@@ -49,6 +49,7 @@ class gameState {
             this.map.push(row_);
         }
 
+        this.sketch.noStroke();
         this.blink();
     }
 
