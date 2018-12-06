@@ -29,17 +29,32 @@ class Tile {
 
   clear() {
     this.sketch.push();
+    this.sketch.stroke(255);
     this.sketch.fill(255);
     this.sketch.rect(this.x * 50, this.y * 50, 50, 50);
     this.sketch.pop();
+
+    return this;
   }
 
 }
 
+class RoadTile extends Tile {
+  update() {
+    this.sketch.push();
+    this.sketch.noStroke();
+    this.sketch.fill('black');
+    this.sketch.pop();
+  }
+}
+
 class GrassTile extends Tile {
   update() {
-    this.sketch.fill('#573B0C')
-    this.sketch.image(_tile_images.get("tree"), this.x * 50, this.y * 50);
+    this.sketch.push();
+    this.sketch.noStroke();
+    this.sketch.fill('#573B0C');
+    this.sketch.image(_tile_images.get("tree"), (this.x * 50) - 1, this.y * 50);
+    this.sketch.pop();
   }
 }
 
@@ -52,6 +67,7 @@ class BuildingTile extends Tile {
 class ColorTile extends Tile {
   update() {
     this.sketch.push();
+    this.sketch.stroke(this.metadata.color);
     this.sketch.fill(this.metadata.color);
     this.sketch.rect(this.x, this.y, 50, 50);
     this.sketch.pop();

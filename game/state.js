@@ -1,5 +1,5 @@
 import { Tile, GrassTile, BuildingTile, ColorTile } from "./tile.js"
-import { RedscrollEffect, MouseSelectEffect } from "./effect.js"
+import { RedscrollEffect, MouseEffect } from "./effect.js"
 import { KeyReactor } from "./select.js"
 
 class gameState {
@@ -14,19 +14,26 @@ class gameState {
         this._old_y = 0;
 
         this.reactors = [
-            new KeyReactor(sketch),
-            new KeyReactor(sketch),
+            new KeyReactor(this),
         ];
 
         this.reactorMode = 0;
+        this.mouseSelector = undefined;
 
-        this.reactors[0].bindings.set(82, () => {
-            let e = new MouseSelectEffect(this.sketch, { color: (0, 0, 255)});
-            this.effects.push(e)
-        })
+        let r = this.reactors[0];
 
-        this.x = 0
-        this.y = 0
+        r.bindings.set(82, () => {
+            this.mouseSelector.callInto = (s, x, y) => {
+                sketch.push();
+                sketch.fill('green');
+                sketch.noStroke();
+                sketch.rect(x * 50, y * 50, 50, 50);
+                sketch.pop();
+            };
+        });
+
+        this.x = 0;
+        this.y = 0;
     }
 
     preload() {
@@ -34,7 +41,9 @@ class gameState {
     }
 
     setup() {
-        this.sketch.createCanvas(this.sketch.windowWidth - 21, this.sketch.windowHeight - 20);
+        let sketch = this.sketch;
+
+        sketch.createCanvas(this.sketch.windowWidth - 21, this.sketch.windowHeight - 20);
 
         let height = this.sketch.height;
         let width = this.sketch.width;
@@ -49,19 +58,28 @@ class gameState {
             this.map.push(row_);
         }
 
-        this.sketch.noStroke();
+        sketch.noStroke();
         this.blink();
+
+        this.mouseSelector = new MouseEffect(this.sketch, { color: 'black'});
+
+        this.mouseSelector.callInto = (s, x, y) => {
+            sketch.push();
+            sketch.noFill();
+            sketch.stroke(s.metadata.color);
+            sketch.rect(x * 50, y * 50, 50, 50);
+            sketch.pop();
+        }
+
+        this.effects.push(this.mouseSelector);
     }
 
     keyPressed() {
-
+        this.reactors[this.reactorMode].react(this.sketch.keyCode);
     }
 
     mouseClicked() {
-        // let t = new BuildingTile(this.sketch, this.x, this.y, {});
-
-        // this.map[this.y][this.x] = t;
-        // this.pending.push(t);
+        this.reactors.mouseClicked();
 
         let x = this.x;
         let y = this.y;
@@ -91,13 +109,11 @@ class gameState {
     }
 
     blink() {
-        for (let y = 0; y != this.map.length; y++) {
-            let row = this.map[y];
-
+        for (let row of this.map) {
             for (let tile of row) {
                 tile.update();
             };
-        }
+        };
     }
 
     draw() {
@@ -108,27 +124,25 @@ class gameState {
             this.pendingLock = true;
 
             while (this.pending.length) {
-                let t = this.pending.pop();
-                if (t) t.update();
+                let item = this.pending.pop();
+                if (item) item.update();
             }
 
             this.pendingLock = false;
         }
 
-        let toClean = 0;
-        for (let e = 0; e < this.effects.length; e++) {
-            if (this.effects[e].update()) {
-                this.effects[e].callback();
-                this.effects[e] = undefined;
-                toClean += 1;
+        let tmp = [];
+
+        while (this.effects.length) {
+            let effect = this.effects.pop();
+            if (!effect.update()) {
+                tmp.push(effect);
+            } else {
+                effect.callback();
             }
         }
 
-        if (toClean) {
-            this.effects = this.effects.filter((v, i, a) => {
-            return v != undefined
-            })
-        }
+        this.effects.push.apply(this.effects, tmp);
     }
 }
 
