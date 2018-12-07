@@ -1,7 +1,8 @@
-import { Tile, GrassTile, BuildingTile, ColorTile } from "./tile.js"
+import { Tile, GrassTile, BuildingTile, ColorTile, RoadTile } from "./tile.js"
 import { RedscrollEffect, MouseEffect } from "./effect.js"
 import { KeyReactor } from "./select.js"
 import { statusBar } from "./status.js"
+import { buildTile, selectCallInto } from "./state_macro.js"
 
 class gameState {
     constructor(sketch) {
@@ -14,6 +15,8 @@ class gameState {
         this._old_x = 0;
         this._old_y = 0;
 
+        this.mouseClickCallback = () => {};
+
         this.reactors = [
             new KeyReactor(this),
         ];
@@ -23,15 +26,13 @@ class gameState {
 
         let r = this.reactors[0];
 
-        r.bindings.set(82, () => {
-            this.mouseSelector.callInto = (s, x, y) => {
-                sketch.push();
-                sketch.fill('green');
-                sketch.noStroke();
-                sketch.rect(x * 50, y * 50, 50, 50);
-                sketch.pop();
-            };
+        r.bindings.set(81, () => {
+            this.mouseClickCallback = () => {};
+            this.mouseSelector.callInto = selectCallInto;
         });
+
+        r.bindings.set(66, buildTile(this, BuildingTile, 'blue'));
+        r.bindings.set(82, buildTile(this, RoadTile, 'green'));
 
         this.x = 0;
         this.y = 0;
@@ -67,16 +68,8 @@ class gameState {
 
         this.blink();
 
-        this.mouseSelector = new MouseEffect(this.sketch, { color: 'black'});
-
-        this.mouseSelector.callInto = (s, x, y) => {
-            sketch.push();
-            sketch.noFill();
-            sketch.stroke(s.metadata.color);
-            sketch.rect(x * 50, y * 50, 50, 50);
-            sketch.pop();
-        }
-
+        this.mouseSelector = new MouseEffect(sketch, { color: 'black'});
+        this.mouseSelector.callInto = selectCallInto;
         this.effects.push(this.mouseSelector);
     }
 
@@ -85,32 +78,12 @@ class gameState {
     }
 
     mouseClicked() {
-        this.reactors.mouseClicked();
-
-        let x = this.x;
-        let y = this.y;
-
-        let e = new RedscrollEffect(this.sketch, x, y, {height: 0});
-
-        this.effects.push(e)
-
-        e.callback = () => {
-            this.map[y][x].clear();
-            this.map[y][x] = new ColorTile(this.sketch, x * 50, y * 50, { color: '#573B0C' });
-            this.pending.push(this.map[y][x]);
-        }
-
+        this.mouseClickCallback();
         return false;
     }
 
     mouseDragged() {
-        this.map[this.y][this.x].clear();
-
-        let t = new BuildingTile(this.sketch, this.x, this.y, {});
-
-        this.map[this.y][this.x] = t;
-        this.pending.push(t);
-
+        this.mouseClickCallback();
         return false;
     }
 
