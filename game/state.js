@@ -96,6 +96,8 @@ class gameState {
     }
 
     draw() {
+        this.statusBar.update();
+
         this.x = Math.floor(this.sketch.mouseX / 50);
         this.y = Math.floor(this.sketch.mouseY / 50);
 
