@@ -39,15 +39,6 @@ class Tile {
 
 }
 
-class RoadTile extends Tile {
-  update() {
-    this.sketch.push();
-    this.sketch.noStroke();
-    this.sketch.fill('black');
-    this.sketch.pop();
-  }
-}
-
 class GrassTile extends Tile {
   update() {
     this.sketch.push();
@@ -74,4 +65,16 @@ class ColorTile extends Tile {
   }
 }
 
-export { Tile, GrassTile, BuildingTile, ColorTile };
+class RoadTile extends Tile {
+  update() {
+    this.sketch.push();
+    this.sketch.noStroke();
+    this.sketch.fill(0);
+    this.sketch.rect(this.x * 50, this.y * 50, 50, 50);
+    this.sketch.fill(255);
+    this.sketch.rect((this.x * 50) + 10, (this.y * 50) + 20, 30, 10);
+    this.sketch.pop();
+  }
+}
+
+export { Tile, GrassTile, BuildingTile, ColorTile, RoadTile };
