@@ -1,6 +1,7 @@
 import { Tile, GrassTile, BuildingTile, ColorTile } from "./tile.js"
 import { RedscrollEffect, MouseEffect } from "./effect.js"
 import { KeyReactor } from "./select.js"
+import { statusBar } from "./status.js"
 
 class gameState {
     constructor(sketch) {
@@ -43,22 +44,27 @@ class gameState {
     setup() {
         let sketch = this.sketch;
 
-        sketch.createCanvas(this.sketch.windowWidth - 21, this.sketch.windowHeight - 20);
+        sketch.createCanvas(sketch.windowWidth - 21, sketch.windowHeight - 20);
 
-        let height = this.sketch.height;
-        let width = this.sketch.width;
+        let height = sketch.height;
+        let width = sketch.width;
+
+        let statusWidth = Math.floor(width / 50) * 50;
+
+        this.statusBar = new statusBar(sketch, statusWidth, sketch.windowWidth - statusWidth);
 
         for (let col = 0; col < Math.floor(height / 50); col++) {
             let row_ = [];
 
             for (let row = 0; row < Math.floor(width / 50); row++) {
-                row_.push(new GrassTile(this.sketch, row, col));
+                row_.push(new GrassTile(sketch, row, col));
             }
 
             this.map.push(row_);
         }
 
         sketch.noStroke();
+
         this.blink();
 
         this.mouseSelector = new MouseEffect(this.sketch, { color: 'black'});
