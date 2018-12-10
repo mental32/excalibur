@@ -100,15 +100,9 @@ class gameState {
         this.x = Math.floor(this.sketch.mouseX / 50);
         this.y = Math.floor(this.sketch.mouseY / 50);
 
-        if (!this.pendingLock) {
-            this.pendingLock = true;
-
-            while (this.pending.length) {
-                let item = this.pending.pop();
-                if (item) item.update();
-            }
-
-            this.pendingLock = false;
+        while (this.pending.length) {
+            let item = this.pending.pop();
+            if (item) item.update();
         }
 
         let tmp = [];
