@@ -1,31 +1,22 @@
 import { gameState } from "./state.js"
 
+const _events = [
+	'mouseClicked',
+	'mouseDragged',
+	'keyPressed',
+	'preload',
+	'setup',
+	'draw',
+]
+
 window.p5 = new p5((sketch) => {
 	let state = new gameState(sketch);
+	let registerEvent = (k) => { sketch[k] = () => { return state[k](); } };
 
 	window.state = state;
 
-	sketch.mouseClicked = () => {
-		state.mouseClicked()
+	for (let eventName of _events) {
+		registerEvent(eventName)
 	}
 
-	sketch.mouseDragged = () => {
-		state.mouseDragged();
-	}
-
-	sketch.preload = () => {
-		state.preload();
-	}
-
-	sketch.keyPressed = () => {
-		state.keyPressed();
-	}
-
-	sketch.setup = () => {
-		state.setup();
-	}
-
-	sketch.draw = () => {
-		state.draw();
-	}
 }, document.getElementById('game'));
