@@ -42,8 +42,10 @@ class MouseEffect extends Effect {
         if (y < 0 || x < 0) return 0;
 
         if (this.y_ != y || this.x_ != x) {
-            let t = window.state.map[this.y_][this.x_];
-            if (t) t.clear().update();
+            let r = window.state.map[this.y_]
+
+            if (r && r[this.x_]) r[this.x_].clear().update();
+
             this.y_ = y;
             this.x_ = x;
         }
