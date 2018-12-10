@@ -53,9 +53,9 @@ class gameState {
 
         let statusWidth = Math.floor(width / 50) * 50;
 
-        this.statusBar = new statusBar(sketch, statusWidth, sketch.windowWidth - statusWidth);
+        this.statusBar = new statusBar(sketch, 0, sketch.windowHeight - 100, sketch.windowWidth);
 
-        for (let col = 0; col < Math.floor(height / 50); col++) {
+        for (let col = 0; col < Math.floor(height / 50) - 1; col++) {
             let row_ = [];
 
             for (let row = 0; row < Math.floor(width / 50); row++) {
@@ -97,8 +97,6 @@ class gameState {
     }
 
     draw() {
-        this.statusBar.update();
-
         this.x = Math.floor(this.sketch.mouseX / 50);
         this.y = Math.floor(this.sketch.mouseY / 50);
 
@@ -125,6 +123,8 @@ class gameState {
         }
 
         this.effects.push.apply(this.effects, tmp);
+
+        this.statusBar.update();
     }
 }
 
