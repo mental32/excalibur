@@ -37,6 +37,10 @@ class Tile {
     return this;
   }
 
+  destroy() {
+    console.log('Unhandled destroy!', this);
+  }
+
 }
 
 class GrassTile extends Tile {
@@ -65,15 +69,80 @@ class ColorTile extends Tile {
   }
 }
 
+const _connectionCallback = [
+  (r) => { return [(r.x * 50) + 20, (r.y * 50), 10, 30] },
+  (r) => { return [(r.x * 50) + 20, (r.y * 50) + 25, 10, 30] },
+  (r) => { return [(r.x * 50), (r.y * 50) + 20, 30, 10] },
+  (r) => { return [(r.x * 50) + 25, (r.y * 50) + 20, 30, 10] },
+];
+
 class RoadTile extends Tile {
+  constructor(sketch, x, y, metadata) {
+    super(sketch, x, y, metadata);
+
+    let m = window.state.map;
+
+    this._connections = [
+      (y - 1 < 0)           ? undefined : m[y - 1][x],
+      (y + 1 <= m.length)   ? undefined : m[y + 1][x],
+      (x - 1 < 0)           ? undefined : m[y][x - 1],
+      (x + 1 <= m[y].length)? undefined : m[y][x + 1]
+    ];
+
+    this.updateConnections();
+  }
+
+  destroy() {
+    let fl = this._connections.filter((i) => { i instanceof RoadTile });
+
+    for (let conn in fl) {
+      for (let i = 0; i < conn._connections.length; i++) {
+        let _conn = conn._connections[i];
+
+        if (Object.is(_conn, this))
+          conn._connections[i] = undefined;
+      }
+
+      conn.updateConnections();
+
+    }
+
+  }
+
   update() {
     this.sketch.push();
     this.sketch.noStroke();
     this.sketch.fill(0);
     this.sketch.rect(this.x * 50, this.y * 50, 50, 50);
+
     this.sketch.fill(255);
-    this.sketch.rect((this.x * 50) + 10, (this.y * 50) + 20, 30, 10);
+
+    for (let closure of this._drawConnections) {
+      closure();
+    }
+
     this.sketch.pop();
+  }
+
+  updateConnections() {
+    this._drawConnections = [
+      () => { this.sketch.rect((this.x * 50) + 20, (this.y * 50) + 20, 10, 10) }
+    ];
+
+    for (let i = 0; i < this._connections.length; i++) {
+      let conn = this._connections[i];
+
+      if (conn instanceof RoadTile) {
+        let I = (i % 2) ? i - 1: i + 1;
+        let i_args = _connectionCallback[i](this);
+        let I_args = _connectionCallback[I](conn);
+
+        this._drawConnections.push(() => {
+          this.sketch.rect(...i_args);
+          this.sketch.rect(...I_args);
+        });
+      }
+    };
   }
 }
 
