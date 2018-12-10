@@ -8,10 +8,10 @@ const _image_data = [
 const _tile_images = new Map();
 
 class Tile {
-  static _loadImages() {
+  static _loadImages(s) {
     for (let i = 0; i < _image_data.length; i++) {
       let data = _image_data[i];
-      let image = window.state.sketch.loadImage(data[1]);
+      let image = s.loadImage(data[1]);
 
       image.resize(50, 0);
       _tile_images.set(data[0], image)

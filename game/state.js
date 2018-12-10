@@ -39,7 +39,8 @@ class gameState {
     }
 
     preload() {
-        Tile._loadImages();
+        Tile._loadImages(this.sketch);
+        statusBar.preload(this.sketch);
     }
 
     setup() {

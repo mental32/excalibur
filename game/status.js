@@ -1,21 +1,24 @@
-
-const images = {};
+var _image, _loaded;
 
 class statusBar {
-    constructor(sketch, x, w) {
+    constructor(sketch, x, y, w) {
         this.sketch = sketch;
 
-        images.banknote = sketch.loadImage("https://i.imgur.com/wisW8vD.png");
-
         this.w = w;
-        this.x = x;
 
-        this.sketch.image(images.banknote, this.x, 10);
+        this.x = x;
+        this.y = y;
+    }
+
+    static preload(s) {
+        if (_loaded) return;
+        _image = s.loadImage("https://i.imgur.com/wisW8vD.png");
+        _loaded = true;
     }
 
     update() {
         this.sketch.push();
-        this.sketch.fill(0);
+        this.sketch.image(_image, this.x, this.y);
         this.sketch.pop();
     }
 }
