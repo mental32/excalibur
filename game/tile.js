@@ -41,7 +41,7 @@ class Tile {
     this.sketch.push();
     this.sketch.stroke(255);
     this.sketch.fill(255);
-    this.sketch.rect(this.x * 50, this.y * 50, 50, 50);
+    this.sketch.rect((this.x * 50) - 1, (this.y * 50) - 1, 51, 51);
     this.sketch.pop();
 
     return this;
