@@ -1,8 +1,8 @@
 let asset = (name) => { return 'https://raw.githubusercontent.com/mental32/excalibur/master/assets/' + name }
 
 const _image_data = [
-  ["tree", "https://i.imgur.com/UZQnx2N.png"],
-  ["building", "https://i.imgur.com/SbFffO1.png"],
+  ["tree", asset("tree.png")],
+  ["building", asset("building.png")],
 ]
 
 const _tile_images = new Map();
