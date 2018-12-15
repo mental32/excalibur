@@ -11,12 +11,11 @@ const _events = [
 
 window.p5 = new p5((sketch) => {
 	let state = new gameState(sketch);
-	let registerEvent = (k) => { sketch[k] = () => { return state[k](); } };
+	let registerEvent = (k) => { sketch[k] = () => { return state[k]() }};
 
 	window.state = state;
 
-	for (let eventName of _events) {
-		registerEvent(eventName)
-	}
+	for (let eventName of _events)
+		registerEvent(eventName);
 
 }, document.getElementById('game'));
