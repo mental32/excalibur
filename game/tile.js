@@ -1,5 +1,7 @@
 let asset = (name) => { return 'https://raw.githubusercontent.com/mental32/excalibur/master/assets/' + name }
 
+var _loaded;
+
 const _image_data = [
   ["tree", asset("tree.png")],
   ["building", asset("building.png")],
@@ -8,7 +10,9 @@ const _image_data = [
 const _tile_images = new Map();
 
 class Tile {
-  static _loadImages(s) {
+  static preload(s) {
+    if (_loaded) return;
+
     for (let i = 0; i < _image_data.length; i++) {
       let data = _image_data[i];
       let image = s.loadImage(data[1]);
@@ -17,6 +21,8 @@ class Tile {
       _tile_images.set(data[0], image)
     }
 
+    _loaded = true;
+
     console.log(_tile_images);
   }
 
@@ -24,8 +30,12 @@ class Tile {
     this.sketch = sketch;
     this.x = x;
     this.y = y;
+
     this.metadata = metadata;
+    this.identify(metadata);
   }
+
+  identify(data) {}
 
   clear() {
     this.sketch.push();

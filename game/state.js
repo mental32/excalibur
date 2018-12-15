@@ -39,7 +39,7 @@ class gameState {
     }
 
     preload() {
-        Tile._loadImages(this.sketch);
+        Tile.preload(this.sketch);
         statusBar.preload(this.sketch);
     }
 
