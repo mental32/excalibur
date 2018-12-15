@@ -6,13 +6,9 @@ class Effect {
         this.y = y
 
         this.metadata = metadata;
-
-        if (callback === undefined) {
-            this.callback = () => {};
-        } else {
-            this.callback = callback;
-        }
+        this.callback = callback? callback : () => {};
     }
+}
 }
 
 class RedscrollEffect extends Effect{
