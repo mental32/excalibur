@@ -9,15 +9,46 @@ class Effect {
         this.callback = callback? callback : () => {};
     }
 }
-}
 
-class RedscrollEffect extends Effect{
+class TileInfoCanvas extends Effect {
+    constructor(sketch, tile) {
+        super(sketch, 0, 0, {}, undefined);
+
+        let s = window.state;
+
+        s.mouseSelector.updating = (x, y) => {
+            return !(x > (s.map[0].length - 6) && x < (s.map[0].length) && y > 0 && y < 6);
+        };
+
+        this._rect_data = [(window.state.map[0].length - 5) * 50, 50, 200, 250]
+
+        this.tile = tile;
+        this._die = false;
+    }
+
     update() {
-        this.sketch.fill(255, 0, 0);
-        this.sketch.rect(this.x * 50, this.y * 50, 50, this.metadata.height)
-        this.metadata.height += 1
+        if (!this.tile) return;
 
-        return this.metadata.height >= 50;
+        this.sketch.push();
+
+        this.sketch.noFill();
+        this.sketch.stroke('yellow');
+        this.sketch.strokeWeight(4)
+        this.sketch.rect(this.tile.x * 50, this.tile.y * 50, 50, 50);
+        this.sketch.fill(255);
+
+        this.sketch.stroke(0);
+        this.sketch.strokeWeight(1);
+
+        let r = this._rect_data;
+
+        this.sketch.rect(...this._rect_data);
+        this.sketch.fill(0);
+        this.sketch.text(JSON.stringify(this.tile.metadata), r[0], r[1] + 16, r[2], r[3]);
+
+        this.sketch.pop();
+
+        return this._die;
     }
 }
 

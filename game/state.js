@@ -1,5 +1,5 @@
 import { Tile, GrassTile, BuildingTile, ColorTile, RoadTile } from "./tile.js"
-import { RedscrollEffect, MouseEffect } from "./effect.js"
+import { MouseEffect, TileInfoCanvas } from "./effect.js"
 import { KeyReactor } from "./select.js"
 import { statusBar } from "./status.js"
 import { bindKeyTile, selectCallInto } from "./state_macro.js"
