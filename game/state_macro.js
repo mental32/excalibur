@@ -8,11 +8,10 @@ function selectCallInto(s, x, y) {
     sketch.pop();
 }
 
-function buildTile(state, tile, fillColor) {
+function bindKeyTile(state, tile, fillColor) {
     let sketch = state.sketch;
 
     return () => {
-
         state.mouseClickCallback = () => {
             let cb = state.map[state.y][state.x].clear().destroy();
 
@@ -34,4 +33,4 @@ function buildTile(state, tile, fillColor) {
     };
 }
 
-export { buildTile, selectCallInto };
+export { bindKeyTile, selectCallInto };

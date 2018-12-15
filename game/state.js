@@ -2,7 +2,7 @@ import { Tile, GrassTile, BuildingTile, ColorTile, RoadTile } from "./tile.js"
 import { RedscrollEffect, MouseEffect } from "./effect.js"
 import { KeyReactor } from "./select.js"
 import { statusBar } from "./status.js"
-import { buildTile, selectCallInto } from "./state_macro.js"
+import { bindKeyTile, selectCallInto } from "./state_macro.js"
 
 class gameState {
     constructor(sketch) {
@@ -28,11 +28,10 @@ class gameState {
 
         r.bindings.set(81, () => {
             this.mouseClickCallback = () => {};
+        r.bindings.set(66, bindKeyTile(this, BuildingTile, 'blue'));
+        r.bindings.set(82, bindKeyTile(this, RoadTile, 'green'));
             this.mouseSelector.callInto = selectCallInto;
         });
-
-        r.bindings.set(66, buildTile(this, BuildingTile, 'blue'));
-        r.bindings.set(82, buildTile(this, RoadTile, 'green'));
 
         this.x = 0;
         this.y = 0;
