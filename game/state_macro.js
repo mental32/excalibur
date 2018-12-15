@@ -14,12 +14,14 @@ function buildTile(state, tile, fillColor) {
     return () => {
 
         state.mouseClickCallback = () => {
-            state.map[state.y][state.x].clear();
+            let cb = state.map[state.y][state.x].clear().destroy();
 
             let t = new tile(state.sketch, state.x, state.y, {});
 
             state.map[state.y][state.x] = t;
             state.pending.push(t);
+
+            if (cb) cb();
         };
 
         state.mouseSelector.callInto = (s, x, y) => {
