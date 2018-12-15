@@ -33,16 +33,19 @@ class MouseEffect extends Effect {
         this.y_ = Math.floor(this.sketch.mouseY / 50);
 
         this.callInto = () => {};
+        this.updating = () => { return true; };
     }
 
     update() {
+        let state = window.state;
         let x = Math.floor(this.sketch.mouseX / 50);
         let y = Math.floor(this.sketch.mouseY / 50);
 
         if (y < 0 || x < 0) return 0;
+        if (!this.updating(x, y)) return 0;
 
         if (this.y_ != y || this.x_ != x) {
-            let r = window.state.map[this.y_]
+            let r = state.map[this.y_]
 
             if (r && r[this.x_]) r[this.x_].clear().update();
 
@@ -50,11 +53,11 @@ class MouseEffect extends Effect {
             this.x_ = x;
         }
 
-        if (y < window.state.map.length && x < window.state.map[0].length) {
-            window.state.map[y][x].clear().update();
+        if (y < state.map.length && x < state.map[0].length) {
+            state.map[y][x].clear().update();
             return this.callInto(this, x, y);
         }
     }
 }
 
-export { Effect, RedscrollEffect, MouseEffect };
+export { Effect, MouseEffect, TileInfoCanvas };
