@@ -2,6 +2,7 @@ import { Tile, GrassTile, BuildingTile, ColorTile, RoadTile } from "./tile.js"
 import { MouseEffect, TileInfoCanvas } from "./effect.js"
 import { KeyReactor } from "./select.js"
 import { statusBar } from "./status.js"
+import { City } from "./city.js"
 import { bindKeyTile, selectCallInto } from "./utils.js"
 
 class gameState {
@@ -12,8 +13,7 @@ class gameState {
         this.map = [];
         this.effects = [];
 
-        this._old_x = 0;
-        this._old_y = 0;
+        this.city = new City(this);
 
         this.mouseClickCallback = () => {};
 
@@ -66,13 +66,13 @@ class gameState {
 
         let statusWidth = Math.floor(width / 50) * 50;
 
-        this.statusBar = new statusBar(sketch, 0, sketch.windowHeight - 100, sketch.windowWidth);
+        this.statusBar = new statusBar(sketch, this.city, 0, sketch.windowHeight - 100, sketch.windowWidth);
 
         for (let col = 0; col < Math.floor(height / 50) - 1; col++) {
             let row_ = [];
 
             for (let row = 0; row < Math.floor(width / 50); row++) {
-                row_.push(new GrassTile(sketch, row, col));
+                row_.push(new GrassTile(sketch, row, col, {health: row}));
             }
 
             this.map.push(row_);
@@ -112,6 +112,8 @@ class gameState {
     }
 
     draw() {
+        this.city.update();
+
         this.x = Math.floor(this.sketch.mouseX / 50);
         this.y = Math.floor(this.sketch.mouseY / 50);
 

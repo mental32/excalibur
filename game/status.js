@@ -3,8 +3,9 @@ import { asset } from "./utils.js"
 var _image, _loaded;
 
 class statusBar {
-    constructor(sketch, x, y, w) {
+    constructor(sketch, city, x, y, w) {
         this.sketch = sketch;
+        this.city = city;
 
         this.w = w;
 
