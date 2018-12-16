@@ -1,9 +1,12 @@
 function selectCallInto(s, x, y) {
     let sketch = window.state.sketch;
+    let state = window.state;
+
+    let c = (Object.is(state.tileInfo.tile, state.map[y][x]))? 'yellow' : s.metadata.color;
 
     sketch.push();
     sketch.noFill();
-    sketch.stroke(s.metadata.color);
+    sketch.stroke(c);
     sketch.rect(x * 50, y * 50, 50, 50);
     sketch.pop();
 }
