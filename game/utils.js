@@ -1,3 +1,5 @@
+let asset = (name) => { return 'https://raw.githubusercontent.com/mental32/excalibur/master/assets/' + name }
+
 function selectCallInto(s, x, y) {
     let sketch = window.state.sketch;
     let state = window.state;
@@ -36,4 +38,4 @@ function bindKeyTile(state, tile, fillColor) {
     };
 }
 
-export { bindKeyTile, selectCallInto };
+export { bindKeyTile, selectCallInto, asset };

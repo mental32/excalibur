@@ -1,4 +1,4 @@
-let asset = (name) => { return 'https://raw.githubusercontent.com/mental32/excalibur/master/assets/' + name }
+import { asset } from "./utils.js"
 
 var _loaded;
 

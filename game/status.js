@@ -1,3 +1,5 @@
+import { asset } from "./utils.js"
+
 var _image, _loaded;
 
 class statusBar {
