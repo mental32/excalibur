@@ -17,11 +17,9 @@ class gameState {
 
         this.mouseClickCallback = () => {};
 
-        this.reactors = [
-            new KeyReactor(this),
-        ];
+        this.reactor = new KeyReactor(),
 
-        this.reactorMode = 0;
+        this.tileInfo = undefined;
         this.mouseSelector = undefined;
 
         let r = this.reactors[0];
@@ -74,7 +72,7 @@ class gameState {
     }
 
     keyPressed() {
-        this.reactors[this.reactorMode].react(this.sketch.keyCode);
+        this.reactor.react(this.sketch.keyCode);
     }
 
     mouseClicked() {

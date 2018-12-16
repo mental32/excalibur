@@ -1,7 +1,6 @@
 
 class KeyReactor {
-    constructor(state) {
-        this.state = state;
+    constructor() {
         this.bindings = new Map();
     }
 

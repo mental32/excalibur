@@ -17,6 +17,7 @@ function bindKeyTile(state, tile, fillColor) {
     let sketch = state.sketch;
 
     return () => {
+        state.reactor.react(81);
         state.mouseClickCallback = () => {
             let cb = state.map[state.y][state.x].clear().destroy();
 
