@@ -26,9 +26,25 @@ class gameState {
 
         r.bindings.set(81, () => {
             this.mouseClickCallback = () => {};
+            this.mouseSelector.updating = () => { return true; };
+            this.mouseSelector.callInto = () => { return false; };
+            this.tileInfo.clear();
+        });
+
         r.bindings.set(66, bindKeyTile(this, BuildingTile, 'blue'));
         r.bindings.set(82, bindKeyTile(this, RoadTile, 'green'));
+        r.bindings.set(83, () => {
             this.mouseSelector.callInto = selectCallInto;
+
+            this.mouseClickCallback = () => {
+                let x = Math.floor(this.sketch.mouseX / 50);
+                let y = Math.floor(this.sketch.mouseY / 50);
+
+                if (y < window.state.map.length && x < window.state.map[0].length) {
+                    if (this.tileInfo.tile) this.tileInfo.tile.clear().update();
+                    this.tileInfo.new(this.map[y][x]);
+                };
+            };
         });
 
         this.x = 0;
@@ -67,7 +83,9 @@ class gameState {
         this.blink();
 
         this.mouseSelector = new MouseEffect(sketch, { color: 'black'});
-        this.mouseSelector.callInto = selectCallInto;
+
+        this.tileInfo = new TileInfoCanvas(this.sketch, undefined);
+        this.effects.push(this.tileInfo);
         this.effects.push(this.mouseSelector);
     }
 
