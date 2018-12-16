@@ -21,7 +21,14 @@ class statusBar {
 
     update() {
         this.sketch.push();
+
         this.sketch.image(_image, this.x, this.y);
+
+        this.sketch.stroke(0);
+        this.sketch.rect(this.x + 50, this.y, 100, 50);
+        this.sketch.textSize(16);
+        this.sketch.text(this.city.funds, this.x + 75, this.y + 30)
+
         this.sketch.pop();
     }
 }
