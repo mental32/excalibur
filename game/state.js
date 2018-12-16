@@ -22,7 +22,7 @@ class gameState {
         this.tileInfo = undefined;
         this.mouseSelector = undefined;
 
-        let r = this.reactors[0];
+        let r = this.reactor;
 
         r.bindings.set(81, () => {
             this.mouseClickCallback = () => {};
