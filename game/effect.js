@@ -13,17 +13,33 @@ class Effect {
 class TileInfoCanvas extends Effect {
     constructor(sketch, tile) {
         super(sketch, 0, 0, {}, undefined);
+        this._rect_data = [(window.state.map[0].length - 5) * 50, 50, 200, 250]
+        this.new(tile);
+    }
 
+    new(tile) {
         let s = window.state;
 
         s.mouseSelector.updating = (x, y) => {
             return !(x > (s.map[0].length - 6) && x < (s.map[0].length) && y > 0 && y < 6);
         };
 
-        this._rect_data = [(window.state.map[0].length - 5) * 50, 50, 200, 250]
-
         this.tile = tile;
         this._die = false;
+    }
+
+    clear() {
+        if (this.tile) this.tile.clear().update();
+        this.tile = undefined
+        this._die = true;
+
+        let map = window.state.map;
+
+        for (let y = 1; y < 6; y++) {
+            for (let tile of map[y].slice(map[0].length - 6)) {
+                tile.clear().update();
+            }
+        }
     }
 
     update() {
