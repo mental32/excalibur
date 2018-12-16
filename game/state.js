@@ -89,6 +89,14 @@ class gameState {
         this.effects.push(this.mouseSelector);
     }
 
+    * tiles() {
+        for (let row of this.map) {
+            for (let tile of row) {
+                yield tile;
+            }
+        }
+    }
+
     keyPressed() {
         this.reactor.react(this.sketch.keyCode);
     }
