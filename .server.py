@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import flask
 
 app = flask.Flask(__name__, static_folder='./assets')
