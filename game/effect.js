@@ -96,9 +96,8 @@ class MouseEffect extends Effect {
             this.x_ = x;
         }
 
-        if (Object.is(state.tileInfo.tile, state.map[y][x])) return;
-
         if (y < state.map.length && x < state.map[0].length) {
+	    if (Object.is(state.tileInfo.tile, state.map[y][x])) return;
             state.map[y][x].clear().update();
             return this.callInto(this, x, y);
         }
