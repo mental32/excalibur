@@ -153,11 +153,14 @@ class RoadTile extends Tile {
         let i_args = _connectionCallback[i](this);
         let I_args = _connectionCallback[I](conn);
 
-        this._drawConnections.push(() => {
+        this._drawConnections[i + 1] = () => {
           this.sketch.rect(...i_args);
           this.sketch.rect(...I_args);
-        });
+        };
+      } else {
+        this._drawConnections[i + 1] = () => {};
       }
+
     };
   }
 }
